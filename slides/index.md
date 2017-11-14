@@ -1,21 +1,161 @@
-- title : React Native with F#
+- title : Make Web Apps Fun to Build and Easy to Refactor with Elm
 - description : Introduction to React Native with F#
-- author : Steffen Forkmann
+- author : Daniel Bachler
 - theme : night
-- transition : default
+- transition : none
+- width: 1920
+- height: 1080
 
 ***
 
-## React Native with F#
+## Make Web Apps Fun to Build & Easy to Refactor with Elm
 
-<br />
-<br />
+<br/>
+<br/>
 
-### Modern mobile app development
+#### Daniel Bachler
+#### [danielbachler.de](http://danielbachler.de)
+#### [@danyx23](http://twitter.com/danyx23) on Twitter
 
-<br />
-<br />
-Steffen Forkmann - [@sforkmann](http://www.twitter.com/sforkmann)
+
+***
+- data-background-image: images/intro_Ber.png
+- data-background-size: contain
+
+***
+- data-background-image: images/LandsOfLanguages.jpg
+- data-background-size: contain
+
+***
+
+## Elm Elevator pitch
+
+* Purely functional programming language
+* Statically typed
+* Compiles to JavaScript
+* Designed to make Web Apps
+* Easy to learn, nice to use
+
+
+***
+
+## Javascript syntax
+
+```Javascript
+function addNumbers(a, b) {
+    return a + b;
+}
+
+// Whatever
+var result = addNumbers(4, "three");
+```
+
+---
+
+## Elm syntax
+
+```elm
+         addNumbers a  b =
+           a + b
+
+
+-- Compile error!
+    result = addNumbers 4  "three"
+```
+
+---
+
+## Elm syntax
+
+```elm
+
+addNumbers a b =
+    a + b
+
+
+result = addNumbers 4 3
+```
+
+
+---
+
+## Type annotations
+
+```elm
+addNumbers : Int -> Int -> Int
+addNumbers a b =
+    a + b
+
+result : Int
+result = addNumbers 4 3
+```
+
+---
+
+## Functions must be a single expression
+
+```elm
+calculateFormula : Int -> Int -> Int
+calculateFormula a b =
+    squaredA = a * a
+    squaredB = b * b
+    squaredA + squaredB
+    -- compile Error
+```
+
+---
+
+## Let blocks for intermediate results
+
+```elm
+calculateFormula : Int -> Int -> Int
+calculateFormula a b =
+    let
+        squaredA = a * a -- <- Compile error
+        squaredB = b * b -- <- Compile error
+    in
+        squaredA + squaredB
+
+```
+
+***
+
+### Pain points Elm solves
+
+--- 
+
+### Undefined is not a function
+#### Elm doesn't have null/undefined
+
+--- 
+
+### Refactoring is hard & error prone
+#### Elm is statically typed and has a simple but powerful type system
+
+--- 
+
+### 
+#### Elm is statically typed and has a simple but powerful type system
+
+
+***
+
+```elm
+// MODEL
+
+type alias Model = {
+    counters : List Int
+}
+
+type Msg = 
+| Insert
+| Remove
+| Modify Int (List Int)
+
+init : Model
+init =
+    { counters = [] }
+```
 
 ***
 
@@ -38,10 +178,8 @@ Steffen Forkmann - [@sforkmann](http://www.twitter.com/sforkmann)
  <img src="images/meter.png" style="background: transparent; border-style: none;"  width=300 />
 
 ---
-
-### Tooling
-
-<img src="images/hotloading.gif" style="background: transparent; border-style: none;"  />
+- data-background-image: images/hotloading.gif
+- data-background-size: contain
 
 *** 
 
@@ -55,200 +193,6 @@ Steffen Forkmann - [@sforkmann](http://www.twitter.com/sforkmann)
  <small>http://danielbachler.de/2016/02/11/berlinjs-talk-about-elm.html</small>
 
 
---- 
-
-### Model - View - Update
-
-    // MODEL
-
-    type Model = int
-
-    type Msg =
-    | Increment
-    | Decrement
-
-    let init() : Model = 0
-
----
-
-### Model - View - Update
-
-    // VIEW
-
-    let view model dispatch =
-        div []
-            [ button [ OnClick (fun _ -> dispatch Decrement) ] [ str "-" ]
-              div [] [ str (model.ToString()) ]
-              button [ OnClick (fun _ -> dispatch Increment) ] [ str "+" ] ]
-
----
-
-### Model - View - Update
-
-    // UPDATE
-
-    let update (msg:Msg) (model:Model) =
-        match msg with
-        | Increment -> model + 1
-        | Decrement -> model - 1
-
----
-
-### Model - View - Update
-
-    // wiring things up
-
-    Program.mkSimple init update view
-    |> Program.withConsoleTrace
-    |> Program.withReact "elmish-app"
-    |> Program.run
-
----
-
-### Model - View - Update
-
-# Demo
-
-***
-
-### Sub-Components
-
-    // MODEL
-
-    type Model = {
-        Counters : Counter.Model list
-    }
-
-    type Msg = 
-    | Insert
-    | Remove
-    | Modify of int * Counter.Msg
-
-    let init() : Model =
-        { Counters = [] }
-
----
-
-### Sub-Components
-
-    // VIEW
-
-    let view model dispatch =
-        let counterDispatch i msg = dispatch (Modify (i, msg))
-
-        let counters =
-            model.Counters
-            |> List.mapi (fun i c -> Counter.view c (counterDispatch i)) 
-        
-        div [] [ 
-            yield button [ OnClick (fun _ -> dispatch Remove) ] [  str "Remove" ]
-            yield button [ OnClick (fun _ -> dispatch Insert) ] [ str "Add" ] 
-            yield! counters ]
-
----
-
-### Sub-Components
-
-    // UPDATE
-
-    let update (msg:Msg) (model:Model) =
-        match msg with
-        | Insert ->
-            { Counters = Counter.init() :: model.Counters }
-        | Remove ->
-            { Counters = 
-                match model.Counters with
-                | [] -> []
-                | x :: rest -> rest }
-        | Modify (id, counterMsg) ->
-            { Counters =
-                model.Counters
-                |> List.mapi (fun i counterModel -> 
-                    if i = id then
-                        Counter.update counterMsg counterModel
-                    else
-                        counterModel) }
-
----
-
-### Sub-Components
-
-# Demo
-
-***
-
-### React
-
-* Facebook library for UI 
-* <code>state => view</code>
-* Virtual DOM
-
----
-
-### Virtual DOM - Initial
-
-<br />
-<br />
-
-
- <img src="images/onchange_vdom_initial.svg" style="background: white;" />
-
-<br />
-<br />
-
- <small>http://teropa.info/blog/2015/03/02/change-and-its-detection-in-javascript-frameworks.html</small>
-
----
-
-### Virtual DOM - Change
-
-<br />
-<br />
-
-
- <img src="images/onchange_vdom_change.svg" style="background: white;" />
-
-<br />
-<br />
-
- <small>http://teropa.info/blog/2015/03/02/change-and-its-detection-in-javascript-frameworks.html</small>
-
----
-
-### Virtual DOM - Reuse
-
-<br />
-<br />
-
-
- <img src="images/onchange_immutable.svg" style="background: white;" />
-
-<br />
-<br />
-
- <small>http://teropa.info/blog/2015/03/02/change-and-its-detection-in-javascript-frameworks.html</small>
-
-
-*** 
-
-### ReactNative
-
- <img src="images/ReactNative.png" style="background: white;" />
-
-
- <small>http://timbuckley.github.io/react-native-presentation</small>
-
-***
-
-### Show me the code
-
-*** 
-
-### TakeAways
-
-* Learn all the FP you can!
-* Simple modular design
-
 *** 
 
 ### Thank you!
@@ -256,3 +200,8 @@ Steffen Forkmann - [@sforkmann](http://www.twitter.com/sforkmann)
 * https://github.com/fable-compiler/fable-elmish
 * https://ionide.io
 * https://facebook.github.io/react-native/
+
+
+***
+- data-background-image: images/outro_Ber.png
+- data-background-size: contain
