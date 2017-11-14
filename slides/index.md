@@ -16,6 +16,7 @@
 #### Daniel Bachler
 #### [danielbachler.de](http://danielbachler.de)
 #### [@danyx23](http://twitter.com/danyx23) on Twitter
+#### This presentaion: daniebachler.de/elm-at-goto-berlin
 
 
 ***
@@ -106,6 +107,7 @@ calculateFormula a b =
 ---
 
 ## Let blocks for intermediate results
+### Still: just a single expression!
 
 ```elm
 calculateFormula : Int -> Int -> Int
@@ -118,7 +120,183 @@ calculateFormula a b =
 
 ```
 
+
+---
+
+## Records
+### (Product types)
+
+```elm
+type alias Programmer = 
+    { name : String
+    , favouriteLanguage : String
+    }
+
+daniel : Programmer
+daniel = 
+    { name = "Daniel"
+    , favouriteLanguage = "Elm"
+    }
+
+```
+
+
+---
+
+## All values are immutable
+
+```elm
+type alias Programmer = 
+    { name : String
+    , favouriteLanguage : String
+    }
+
+programmerA : Programmer
+programmerA = 
+    { name = "Daniel"
+    , favouriteLanguage = "Elm"
+    }
+
+programmerA =
+    { name = "Jack"
+    , favouriteLanguage = "Java"
+    }
+-- Compile error!
+
+programmerA.name = "Eve"
+-- Compile error!
+
+```
+
+
+---
+
+## Creating new record values based on old ones
+
+```elm
+type alias Programmer = 
+    { name : String
+    , favouriteLanguage : String
+    }
+
+programmerA : Programmer
+programmerA = 
+    { name = "Daniel"
+    , favouriteLanguage = "Elm"
+    }
+
+programmerB : Programmer
+programmerB = 
+    { programmerA 
+    | name = "Eve"
+    }
+```
+
+---
+
+## Union types
+### (aka Sum types)
+
+```elm
+type Status 
+    = Pending
+    | Completed
+
+val1 = Pending
+
+type alias Task =
+    { name : String
+    , status : Status
+    }
+```
+
+---
+
+## What if only some states have data attached?
+
+* Show progress while task is running
+* How would you model this in another language?
+
+---
+
+## Union types
+### (aka Sum types)
+
+```elm
+type Status 
+    = Pending
+    | Running Int
+    | Completed
+
+val1 : Status
+val1 = Running 0
+```
+
+---
+
+## Pattern matching
+
+```elm
+getUIString : Status -> String
+getUIString status =
+    match status with
+        Pending -> "Not yet started"
+        Running 0 -> "Starting"
+        Running progress -> "Processing - " ++ (toString progress) ++ "%"
+        Completed -> "Completed"
+```
+
+
+---
+
+## Polymorphic types 
+### (aka Generics)
+
+```elm
+type BinaryTree elementType 
+    = Leaf elementType
+    | Node (BinaryTree elementType) (BinaryTree elementType)
+
+leafOnly : BinaryTree Int
+leafOnly = Leaf 23
+
+smallBinaryTree : BinaryTree Int
+smallTree = Node (Leaf 17) leafOnly
+```
+
 ***
+
+### Creating Web apps with Elm
+
+* Elm comes with a small runtime
+* No direkt Javascript FFI
+
+***
+
+### Elm is entirely pure!
+
+* No side effects possible in the language
+* (Except Debug.log and Debug.crash)
+
+***
+
+### Command values tell the Elm runtime to perform side effects
+
+* Like HTTP requests
+* Random number generation
+* ...
+
+***
+
+### The elm architecture
+
+***
+- data-background-image: images/Elm.png
+- data-background-size: contain
+
+***
+
+
 
 ### Pain points Elm solves
 
