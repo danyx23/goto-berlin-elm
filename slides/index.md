@@ -13,10 +13,10 @@
 <br/>
 <br/>
 
-#### Daniel Bachler
+
 #### [danielbachler.de](http://danielbachler.de)
 #### [@danyx23](http://twitter.com/danyx23) on Twitter
-#### This presentaion: daniebachler.de/elm-at-goto-berlin
+#### This presentation: [danielbachler.de/elm-at-goto-berlin](danielbachler.de/elm-at-goto-berlin)
 
 
 ***
@@ -43,12 +43,12 @@
 ## Javascript syntax
 
 ```Javascript
-function addNumbers(a, b) {
-    return a + b;
+function multiplyNumbers(a, b) {
+    return a * b;
 }
 
-// Whatever
-var result = addNumbers(4, "three");
+// Runtime error
+var result = multiplyNumbers(4, "three");
 ```
 
 ---
@@ -56,12 +56,12 @@ var result = addNumbers(4, "three");
 ## Elm syntax
 
 ```elm
-         addNumbers a  b =
-           a + b
+         multiplyNumbers a  b =
+           a * b
 
 
 -- Compile error!
-    result = addNumbers 4  "three"
+    result = multiplyNumbers 4  "three"
 ```
 
 ---
@@ -70,11 +70,11 @@ var result = addNumbers(4, "three");
 
 ```elm
 
-addNumbers a b =
-    a + b
+multiplyNumbers a b =
+    a * b
 
 
-result = addNumbers 4 3
+result = multiplyNumbers 4 3
 ```
 
 
@@ -83,15 +83,63 @@ result = addNumbers 4 3
 ## Type annotations
 
 ```elm
-addNumbers : Int -> Int -> Int
-addNumbers a b =
-    a + b
+multiplyNumbers : Int -> Int -> Int
+multiplyNumbers a b =
+    a * b
 
 result : Int
-result = addNumbers 4 3
+result = multiplyNumbers 4 3
+
+type alias Person =
+    { name : String
+    , yearBorn : Int
+    }
+
+calculateAge : Int -> Person -> Int
+calculateAge currentYear person =
+    currentYear - person.yearBorn
 ```
 
+***
+
+## Pain points Elm adresses
+
+***
+
+## Code in dynamic languages is hard to refactor
+
+***
+
 ---
+
+## Records
+### (Product types)
+
+```elm
+type alias Programmer = 
+    { name : String
+    , favouriteLanguage : String
+    }
+
+daniel : Programmer
+daniel = 
+    { name = "Daniel"
+    , favouriteLanguage = "Elm"
+    }
+
+```
+
+
+***
+
+## Undefined is not a function / NullReferenceException
+
+## Elm does not have null/undefined
+
+***
+
+## Then how can it represent 
+
 
 ## Functions must be a single expression
 
@@ -121,24 +169,6 @@ calculateFormula a b =
 ```
 
 
----
-
-## Records
-### (Product types)
-
-```elm
-type alias Programmer = 
-    { name : String
-    , favouriteLanguage : String
-    }
-
-daniel : Programmer
-daniel = 
-    { name = "Daniel"
-    , favouriteLanguage = "Elm"
-    }
-
-```
 
 
 ---
