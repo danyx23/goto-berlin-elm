@@ -47,7 +47,7 @@ function multiplyNumbers(a, b) {
     return a * b;
 }
 
-// Runtime error
+// Weird type coercion
 var result = multiplyNumbers(4, "three");
 ```
 
