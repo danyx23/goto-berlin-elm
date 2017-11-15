@@ -6,7 +6,7 @@
 - width: 1920
 - height: 1080
 
----
+***
 
 ## Make Web Apps Fun to Build & Easy to Refactor with Elm
 
@@ -88,7 +88,13 @@ multiplyNumbers a b =
 
 result : Int
 result = multiplyNumbers 4 3
+```
 
+---
+
+## Type annotations
+
+```Elm
 type alias Person =
     { name : String
     , yearBorn : Int
@@ -105,14 +111,14 @@ calculateAge currentYear person =
 
 ---
 
-## Code in dynamically typed languages is straining to refactor
+### Code in dynamic languages is hard to refactor correctly
 
 * So we do it less => lower code quality
 * Often introduce bugs/crashes
 
 ---
 
-## In Elm, everything is fully typed
+### In Elm, everything is fully typed
 
 * Even when no type annotations are used, ever
 * The compiler checks that all types match
@@ -120,8 +126,8 @@ calculateAge currentYear person =
 
 ---
 
-## Records
-### (Product types)
+### Records
+#### (Product types)
 
 ```elm
 type alias Programmer = 
@@ -139,8 +145,8 @@ daniel =
 
 ---
 
-## Union types
-### (aka Sum types)
+### Union types
+#### (aka Sum types)
 
 ```elm
 type Status 
@@ -158,31 +164,31 @@ type alias Task =
 
 ---
 
-## Pattern matching
+### Pattern matching
 
 ```elm
 getUIString : Status -> String
 getUIString status =
-    match status with
+    --- status with
         Pending -> "Not yet started"
         -- Compile error! Missing case!
 ```
 
 ---
 
-## Pattern matching
+### Pattern matching
 
 ```elm
 getUIString : Status -> String
 getUIString status =
-    match status with
+    --- status with
         Pending -> "Not yet started"
         Completed -> "Completed"
 ```
 
 ---
 
-## What if only some states have data attached?
+### What if only some states have data attached?
 
 * Progress report when running
 * How would you model this in another language?
@@ -193,6 +199,7 @@ type Status
     | Completed
     | Failed
 
+val1 : Status
 val1 = Pending
 
 type alias Task =
@@ -206,47 +213,56 @@ type alias Task =
 
 ---
 
-## Making invalid states unrepresentable
+### Making invalid states unrepresentable
 
 ---
 
-## The real power of union types
+### The real power of union types
 
 ```elm
 type Status 
     = Pending
-    | Running Int Int -- Two ints as "payload" data, current item and number of items
+    | Running Int Int -- Two ints as "payload" data
     | Completed
     | Failed (List String) -- a list of strings as "payload" data
 
 val1 : Status
 val1 = Running 0 10
+
+type alias Task =
+    { name : String
+    , status : Status
+    }
 ```
 
 ---
 
-## Pattern matching
+### Pattern matching
 
 ```elm
 getUIString : Status -> String
 getUIString status =
-    match status with
-        Pending -> "Not yet started"
-        Running current total -> "Processing " ++ (toString (current + 1)) ++ " of " ++ (toString total)
-        Completed -> "Completed"
-        Failed errors -> "Failed! Message : " ++ (String.join ", " errors)
+    case status of
+        Pending -> 
+            "Not yet started"
+        Running current total -> 
+            (toString (current + 1)) ++ " of " ++ (toString total)
+        Completed -> 
+            "Completed"
+        Failed errors -> 
+            "Failed! Message : " ++ (String.join ", " errors)
 ```
 
 --- 
 
-## Pattern matching
+### Pattern matching
 
 * Pattern matching is the only way to get payload "out" of a union type
 
 ---
 
-## Polymorphic types 
-### (aka Generics)
+### Polymorphic types 
+#### (aka Generics)
 
 ```elm
 type BinaryTree elementType 
@@ -263,17 +279,18 @@ smallTree = Node (Leaf 17) leafOnly
 ---
 
 
-## Undefined is not a function / NullReferenceException
+### Undefined is not a function / NullReferenceException
 
-## Elm does not have null/undefined
-
----
-
-## How can it represent missing values?
+* Elm does not have null/undefined
+* This kills a whole family of bugs
 
 ---
 
-## Dealing with optional values
+### How can it represent missing values?
+
+---
+
+### Dealing with optional values
 
 ```elm
 type Maybe a 
@@ -289,7 +306,7 @@ val2 = Just 23
 
 ---
 
-## What if we need error information?
+### What if we need error information?
 
 ```elm
 type Result err success 
@@ -308,7 +325,7 @@ val2 = Ok 23
 
 ---
 
-## All values are immutable
+### All values are immutable
 
 ```elm
 x = 1
@@ -325,7 +342,7 @@ y = x + 1 -- Ok
 
 ---
 
-## All (nested) fields are immutable
+### All (nested) fields are immutable
 
 ```elm
 type alias Programmer = 
@@ -345,7 +362,7 @@ programmerA.name = "Eve"
 
 ---
 
-## Creating new record values based on old ones
+### Creating new record values based on old ones
 
 ```elm
 type alias Programmer = 
@@ -413,13 +430,15 @@ result1 == result2; // False
 
 ---
 
-## This makes testing super nice
+### This makes testing super nice
 
 * Calling the same function again with the same arguments will always lead to the same result
 * Thanks to static types, Unit testing can focus on actual logic
 * Mocking is usually not necessary with pure functions
 
 ---
+
+### And refactorings are safe and fun!
 
 ---
 
@@ -441,6 +460,28 @@ result1 == result2; // False
 
 ---
 
+### How view functions work
+
+```elm
+view : Model -> Html Msg
+view model =
+    div [ class "counter"]
+        [ button [ onClick Decrement ] [ text "-" ]
+        , div [] [ text (toString model.counter) ]
+        , button [ onClick Increment ] [ text "+" ]
+        ]
+```
+
+```html
+<div class="counter">
+    <button onClick="dispatch(Decrement)">-</button>
+    <div>{model.counter}</div>
+    <button onClick="dispatch(Increment)">+</button>
+</div>
+```
+
+---
+
 ### Demo time
 
 ---
@@ -456,19 +497,21 @@ result1 == result2; // False
 ### Commands in action
 
 ```elm
+import Http
+
 type Msg
   = LoadClicked
-  | Loaded (Result Http.Error Metadata)
+  | Loaded (Result Http.Error String)
 
-send : Cmd Msg
-send =
+sendCommand : Cmd Msg
+sendCommand =
   Http.send Loaded (Http.getString "https://example.com/books/war-and-peace")
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
         LoadClicked ->
-            (model, send)
+            (model, sendCommand)
         Loaded (Ok text) ->
             ...
         Loaded (Err httpErr) ->
@@ -480,10 +523,42 @@ update msg model =
 ### Ports are used to send messages to/from Javascript
 
 * This lets you use any Javascript library / Browser API in native JS
-* Send messages back and forth between Elm (Business Logic, Rendering) and native JS (e.g. Web Audio API)
+* Send messages back and forth between Elm (Business Logic, Rendering) and your native JS code
 
+---
+
+## Building production apps with Elm
+
+* Overall: very nice experience
+* No runtime exceptions, evar!
+* Compiler helps you, especially when refactoring
+
+---
+
+## Obstacles with Elm
+
+* Sometimes you need to use ports for trivial things (e.g. focus an input element)
+* Can't publish modules with "native" Javascript as official elm package (e.g. library to use Web Audio API)
+
+---
+
+## Elm is ready to be used in production
+
+* Drastically reduced bug count
+* Development speed does not slow down as project gets more complex
+* Some JavaScript interop via ports probably necessary, but still much better than all JS!
 
 --- 
+
+## Where to go to learn more?
+
+* [try.elm-lang.org](http://try.elm-lang.org)
+* [http://elm-lang.org](http://elm-lang.org)
+* Try it for a side project or internal tool
+* Go on the Elm slack and ask questions!
+
+
+---
 
 ### Thank you!
 
