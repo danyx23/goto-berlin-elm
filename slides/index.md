@@ -6,7 +6,7 @@
 - width: 1920
 - height: 1080
 
-***
+---
 
 ## Make Web Apps Fun to Build & Easy to Refactor with Elm
 
@@ -19,26 +19,25 @@
 #### This presentation: [danielbachler.de/elm-at-goto-berlin](danielbachler.de/elm-at-goto-berlin)
 
 
-***
+---
 - data-background-image: images/intro_Ber.png
 - data-background-size: contain
 
-***
+---
 - data-background-image: images/LandsOfLanguages.jpg
 - data-background-size: contain
 
-***
+---
 
 ## Elm Elevator pitch
 
-* Purely functional programming language
-* Statically typed
-* Compiles to JavaScript
-* Designed to make Web Apps
+* Statically typed, purely functional programming language
+* Compiles to Javascript
+* **No runtime errors**
 * Easy to learn, nice to use
 
 
-***
+---
 
 ## Javascript syntax
 
@@ -100,22 +99,26 @@ calculateAge currentYear person =
     currentYear - person.yearBorn
 ```
 
-***
+---
 
 ## Pain points Elm adresses
 
-***
+---
 
-## Code in dynamic languages is straining to refactor
+## Code in dynamically typed languages is straining to refactor
 
 * So we do it less => lower code quality
 * Often introduce bugs/crashes
 
-***
+---
 
 ## In Elm, everything is fully typed
 
-***
+* Even when no type annotations are used, ever
+* The compiler checks that all types match
+* There is no "any" type like in Typescript/Flow
+
+---
 
 ## Records
 ### (Product types)
@@ -134,7 +137,7 @@ daniel =
 
 ```
 
-***
+---
 
 ## Union types
 ### (aka Sum types)
@@ -152,25 +155,17 @@ type alias Task =
     }
 ```
 
----
-
-## What if only some states have data attached?
-
-* Show progress while task is running
-* How would you model this in another language?
 
 ---
 
-## The real power of union types
+## Pattern matching
 
 ```elm
-type Status 
-    = Pending
-    | Running Int
-    | Completed
-
-val1 : Status
-val1 = Running 0
+getUIString : Status -> String
+getUIString status =
+    match status with
+        Pending -> "Not yet started"
+        -- Compile error! Missing case!
 ```
 
 ---
@@ -182,11 +177,73 @@ getUIString : Status -> String
 getUIString status =
     match status with
         Pending -> "Not yet started"
-        Running progress -> "Processing - " ++ (toString progress) ++ "%"
         Completed -> "Completed"
 ```
 
-***
+---
+
+## What if only some states have data attached?
+
+* Progress report when running
+* How would you model this in another language?
+
+```elm
+type Status 
+    = Pending
+    | Completed
+    | Failed
+
+val1 = Pending
+
+type alias Task =
+    { name : String
+    , status : Status
+    , currentItem : Int
+    , numItems : Int
+    , errors : List String
+    }
+```
+
+---
+
+## Making invalid states unrepresentable
+
+---
+
+## The real power of union types
+
+```elm
+type Status 
+    = Pending
+    | Running Int Int -- Two ints as "payload" data, current item and number of items
+    | Completed
+    | Failed (List String) -- a list of strings as "payload" data
+
+val1 : Status
+val1 = Running 0 10
+```
+
+---
+
+## Pattern matching
+
+```elm
+getUIString : Status -> String
+getUIString status =
+    match status with
+        Pending -> "Not yet started"
+        Running current total -> "Processing " ++ (toString (current + 1)) ++ " of " ++ (toString total)
+        Completed -> "Completed"
+        Failed errors -> "Failed! Message : " ++ (String.join ", " errors)
+```
+
+--- 
+
+## Pattern matching
+
+* Pattern matching is the only way to get payload "out" of a union type
+
+---
 
 ## Polymorphic types 
 ### (aka Generics)
@@ -203,17 +260,18 @@ smallBinaryTree : BinaryTree Int
 smallTree = Node (Leaf 17) leafOnly
 ```
 
-***
+---
+
 
 ## Undefined is not a function / NullReferenceException
 
 ## Elm does not have null/undefined
 
-***
+---
 
-## Then how can it represent missing values?
+## How can it represent missing values?
 
-***
+---
 
 ## Dealing with optional values
 
@@ -222,14 +280,14 @@ type Maybe a
     = Nothing
     | Just a
 
-val1 : Maybe a
+val1 : Maybe Int
 val1 = Nothing
 
 val2 : Maybe Int
 val2 = Just 23
 ```
 
-***
+---
 
 ## What if we need error information?
 
@@ -238,41 +296,11 @@ type Result err success
     = Ok success
     | Err err
 
-val1 : Result String a
+val1 : Result String Int
 val1 = Err "This is an error message"
 
-val2 : Restul a Int
+val2 : Result String Int
 val2 = Ok 23
-```
-
-
-
-
-## Functions must be a single expression
-
-```elm
-calculateFormula : Int -> Int -> Int
-calculateFormula a b =
-    squaredA = a * a
-    squaredB = b * b
-    squaredA + squaredB
-    -- compile Error
-```
-
----
-
-## Let blocks for intermediate results
-### Still: just a single expression!
-
-```elm
-calculateFormula : Int -> Int -> Int
-calculateFormula a b =
-    let
-        squaredA = a * a -- <- Compile error
-        squaredB = b * b -- <- Compile error
-    in
-        squaredA + squaredB
-
 ```
 
 
@@ -281,6 +309,23 @@ calculateFormula a b =
 ---
 
 ## All values are immutable
+
+```elm
+x = 1
+
+x = 2 -- compile error
+
+x = x + 1 -- compile error
+
+y = x + 1 -- Ok
+
+```
+
+
+
+---
+
+## All (nested) fields are immutable
 
 ```elm
 type alias Programmer = 
@@ -294,17 +339,9 @@ programmerA =
     , favouriteLanguage = "Elm"
     }
 
-programmerA =
-    { name = "Jack"
-    , favouriteLanguage = "Java"
-    }
--- Compile error!
-
 programmerA.name = "Eve"
 -- Compile error!
-
 ```
-
 
 ---
 
@@ -331,23 +368,82 @@ programmerB =
 
 ---
 
+## This means we can't do loops in elm!
 
+* Use map, fold (aka reduce), or recursion instead
 
-***
+---
 
-### Creating Web apps with Elm
+### Getting work done with Elm
 
 * Elm comes with a small runtime
 * No direkt Javascript FFI
 
-***
+---
 
 ### Elm is entirely pure!
 
 * No side effects possible in the language
 * (Except Debug.log and Debug.crash)
 
-***
+--- 
+
+```elm
+-- Elm
+addNumbers : Int -> Int -> Int
+addNumbers a b =
+    a + b
+
+result1 = addNumbers 1 2
+result2 = addNumbers 1 2
+result 1 == result 2 -- True
+```
+
+```Javascript
+/// Javascript
+function addNumbersWeird(a, b) {
+    window.myGlobalState = window.myGlobalState || 0;
+    return a + b + (window.myGlobalState++);
+}
+
+var result1 = addNumbersWeird(1, 2);
+var result2 = addNumbersWeird(1, 2);
+result1 == result2; // False
+```
+
+---
+
+## This makes testing super nice
+
+* Calling the same function again with the same arguments will always lead to the same result
+* Thanks to static types, Unit testing can focus on actual logic
+* Mocking is usually not necessary with pure functions
+
+---
+
+---
+
+### The elm architecture
+
+---
+- data-background-image: images/Elm.png
+- data-background-size: contain
+
+---
+
+### Benefits
+
+* Model is a single source of truth
+* Visual elements are created from the current model
+* Apps are well structured
+* update function is the only place where your state is modified
+* Possible to replay UI sessions easily, implement Undo/Redo, ...
+
+---
+
+### Demo time
+
+---
 
 ### Command values tell the Elm runtime to perform side effects
 
@@ -355,100 +451,47 @@ programmerB =
 * Random number generation
 * ...
 
-***
+---
 
-### The elm architecture
-
-***
-- data-background-image: images/Elm.png
-- data-background-size: contain
-
-***
-
-
-
-### Pain points Elm solves
-
---- 
-
-### Undefined is not a function
-#### Elm doesn't have null/undefined
-
---- 
-
-### Refactoring is hard & error prone
-#### Elm is statically typed and has a simple but powerful type system
-
---- 
-
-### 
-#### Elm is statically typed and has a simple but powerful type system
-
-
-***
+### Commands in action
 
 ```elm
-// MODEL
+type Msg
+  = LoadClicked
+  | Loaded (Result Http.Error Metadata)
 
-type alias Model = {
-    counters : List Int
-}
+send : Cmd Msg
+send =
+  Http.send Loaded (Http.getString "https://example.com/books/war-and-peace")
 
-type Msg = 
-| Insert
-| Remove
-| Modify Int (List Int)
-
-init : Model
-init =
-    { counters = [] }
+update : Msg -> Model -> (Model, Cmd Msg)
+update msg model =
+    case msg of
+        LoadClicked ->
+            (model, send)
+        Loaded (Ok text) ->
+            ...
+        Loaded (Err httpErr) ->
+            ...
 ```
 
-***
+--- 
 
-### Modern mobile app development?
+### Ports are used to send messages to/from Javascript
 
-* UI/UX
-    * "Native mobile apps"
-    * Performance
-* Tooling
-    * Hot loading
-    * IntelliSense
-* Maintainability
-    * Easy to debug
-    * Correctness
-
----
-
-### "Native" UI
-
- <img src="images/meter.png" style="background: transparent; border-style: none;"  width=300 />
-
----
-- data-background-image: images/hotloading.gif
-- data-background-size: contain
-
-*** 
-
-### Model - View - Update
-
-#### "Elm - Architecture"
-
- <img src="images/Elm.png" style="background: white;" width=700 />
+* This lets you use any Javascript library / Browser API in native JS
+* Send messages back and forth between Elm (Business Logic, Rendering) and native JS (e.g. Web Audio API)
 
 
- <small>http://danielbachler.de/2016/02/11/berlinjs-talk-about-elm.html</small>
-
-
-*** 
+--- 
 
 ### Thank you!
 
-* https://github.com/fable-compiler/fable-elmish
-* https://ionide.io
-* https://facebook.github.io/react-native/
+#### [danielbachler.de](http://danielbachler.de)
+#### [@danyx23](http://twitter.com/danyx23) on Twitter
+#### This presentation: [danielbachler.de/elm-at-goto-berlin](danielbachler.de/elm-at-goto-berlin)
 
 
-***
+---
 - data-background-image: images/outro_Ber.png
 - data-background-size: contain
