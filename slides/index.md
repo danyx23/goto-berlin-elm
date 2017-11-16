@@ -10,6 +10,8 @@
 - data-background-image: images/intro_Ber.png
 - data-background-size: contain
 
+<br/>
+
 ---
 
 ## Make Web Apps Fun to Build & Easy to Refactor with Elm
