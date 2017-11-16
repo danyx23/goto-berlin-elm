@@ -7,6 +7,10 @@
 - height: 1080
 
 ***
+- data-background-image: images/intro_Ber.png
+- data-background-size: contain
+
+---
 
 ## Make Web Apps Fun to Build & Easy to Refactor with Elm
 
@@ -17,12 +21,6 @@
 #### [danielbachler.de](http://danielbachler.de)
 #### [@danyx23](http://twitter.com/danyx23) on Twitter
 #### Work at [Douglas Connect](http://www.douglasconnect.com)
-#### This presentation: [danielbachler.de/elm-at-goto-berlin](danielbachler.de/elm-at-goto-berlin)
-
-
----
-- data-background-image: images/intro_Ber.png
-- data-background-size: contain
 
 ---
 - data-background-image: images/LandsOfLanguages.jpg
@@ -191,7 +189,7 @@ type alias Task =
 ```elm
 getUIString : Status -> String
 getUIString status =
-    --- status with
+    case status of
         Pending -> "Not yet started"
         -- Compile error! Missing case!
 ```
@@ -203,7 +201,7 @@ getUIString status =
 ```elm
 getUIString : Status -> String
 getUIString status =
-    --- status with
+    case status of
         Pending -> "Not yet started"
         Completed -> "Completed"
 ```
@@ -220,9 +218,6 @@ type Status
     = Pending
     | Completed
     | Failed
-
-val1 : Status
-val1 = Pending
 
 type alias Task =
     { name : String
@@ -292,10 +287,12 @@ type BinaryTree elementType
     | Node (BinaryTree elementType) (BinaryTree elementType)
 
 leafOnly : BinaryTree Int
-leafOnly = Leaf 23
+leafOnly = 
+    Leaf 23
 
-smallBinaryTree : BinaryTree Int
-smallTree = Node (Leaf 17) leafOnly
+smallTree : BinaryTree Int
+smallTree =
+    Node (Leaf 17) leafOnly
 ```
 
 ---
@@ -413,19 +410,19 @@ programmerB =
 
 ---
 
-### Getting work done with Elm
-
-* Elm comes with a small runtime
-* No direkt Javascript FFI
-
----
-
 ### Elm is entirely pure!
 
 * No side effects possible in the language
 * (Except Debug.log and Debug.crash)
 
 --- 
+
+### Getting work done with Elm
+
+* Elm comes with a small runtime
+* No direkt Javascript FFI
+
+---
 
 ```elm
 -- Elm
@@ -555,6 +552,7 @@ update msg model =
 * Overall: very nice experience
 * No runtime exceptions, evar!
 * Compiler helps you, especially when refactoring
+* Wonderful confidence in our code
 
 ---
 
@@ -588,7 +586,7 @@ update msg model =
 
 #### [danielbachler.de](http://danielbachler.de)
 #### [@danyx23](http://twitter.com/danyx23) on Twitter
-#### This presentation: [danielbachler.de/elm-at-goto-berlin](danielbachler.de/elm-at-goto-berlin)
+
 
 
 ---
