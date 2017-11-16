@@ -28,25 +28,36 @@
 - data-background-image: images/LandsOfLanguages.jpg
 - data-background-size: contain
 
+<br/>
+
 ---
 
 - data-background-image: images/LandsOfLanguages1.jpg
 - data-background-size: contain
+
+<br/>
 
 ---
 
 - data-background-image: images/LandsOfLanguages2.jpg
 - data-background-size: contain
 
+<br/>
+
 ---
 
 - data-background-image: images/LandsOfLanguages3.jpg
 - data-background-size: contain
 
+<br/>
+
+
 ---
 
 - data-background-image: images/LandsOfLanguages4.jpg
 - data-background-size: contain
+
+<br/>
 
 ---
 
@@ -470,6 +481,9 @@ result1 == result2; // False
 - data-background-image: images/ElmArchitecture.jpg
 - data-background-size: contain
 
+<br/>
+
+
 ---
 
 ### Benefits
@@ -594,3 +608,5 @@ update msg model =
 ---
 - data-background-image: images/outro_Ber.png
 - data-background-size: contain
+
+<br/>
