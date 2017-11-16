@@ -1,0 +1,801 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Make Web Apps Fun to Build and Easy to Refactor with Elm</title>
+    <meta name="description" content="Introduction to React Native with F#">
+    <meta name="author" content="Daniel Bachler">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="//code.jquery.com/jquery-1.8.0.js"></script>
+    <script src="//code.jquery.com/ui/1.8.23/jquery-ui.js"></script>
+    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/night.css" id="theme">
+    <link type="text/css" rel="stylesheet" href="fsharp.formatting/styles/style.css" />
+    <link type="text/css" rel="stylesheet" href="fsharp.formatting/styles/deedle.css" />
+    <link type="text/css" rel="stylesheet" href="css/custom.css" />
+    <script src="fsharp.formatting/styles/tips.js" type="text/javascript"></script>
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+    <link rel="stylesheet" href="css/fsreveal.css">
+    <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+    <script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+    </script>
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+    <script language="javascript" type="text/javascript">
+        function init()
+        {
+            websocket = new WebSocket("ws://"+window.location.host+"/websocket");
+            websocket.onmessage = function(evt) { location.reload(); };
+        }
+        window.addEventListener("load", init, false);
+    </script>
+</head>
+<body>
+    <div class="reveal">
+        
+        <!-- Any section element inside of this container is displayed as a slide -->
+        <div class="slides">
+            <section >
+<section data-background-image="images/intro_Ber.png" data-background-size="contain">
+</section>
+<section >
+<h2>Make Web Apps Fun to Build &amp; Easy to Refactor with Elm</h2>
+<br/>
+<br/>
+<h4><a href="http://danielbachler.de">danielbachler.de</a></h4>
+<h4><a href="http://twitter.com/danyx23">@danyx23</a> on Twitter</h4>
+<h4>Work at <a href="http://www.douglasconnect.com">Douglas Connect</a></h4>
+</section>
+<section data-background-image="images/LandsOfLanguages.jpg" data-background-size="contain">
+</section>
+<section data-background-image="images/LandsOfLanguages1.jpg" data-background-size="contain">
+</section>
+<section data-background-image="images/LandsOfLanguages2.jpg" data-background-size="contain">
+</section>
+<section data-background-image="images/LandsOfLanguages3.jpg" data-background-size="contain">
+</section>
+<section data-background-image="images/LandsOfLanguages4.jpg" data-background-size="contain">
+</section>
+<section >
+<h2>Elm Elevator pitch</h2>
+<ul>
+<li>Statically typed, purely functional programming language</li>
+<li>Compiles to Javascript</li>
+<li><strong>No runtime errors</strong></li>
+<li>Easy to learn, nice to use</li>
+</ul>
+</section>
+<section >
+<h2>Javascript syntax</h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="Javascript">function multiplyNumbers(a, b) {
+    return a * b;
+}
+
+// Weird type coercion
+var result = multiplyNumbers(4, "three");
+</code></pre></td></tr></table>
+</section>
+<section >
+<h2>Elm syntax</h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="elm">         multiplyNumbers a  b =
+           a * b
+
+
+-- Compile error!
+    result = multiplyNumbers 4  "three"
+</code></pre></td></tr></table>
+</section>
+<section >
+<h2>Elm syntax</h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="elm">
+multiplyNumbers a b =
+    a * b
+
+
+result = multiplyNumbers 4 3
+</code></pre></td></tr></table>
+</section>
+<section >
+<h2>Type annotations</h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="elm">multiplyNumbers : Int -&gt; Int -&gt; Int
+multiplyNumbers a b =
+    a * b
+
+result : Int
+result = multiplyNumbers 4 3
+</code></pre></td></tr></table>
+</section>
+<section >
+<h2>Type annotations</h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="Elm">type alias Person =
+    { name : String
+    , yearBorn : Int
+    }
+
+calculateAge : Int -&gt; Person -&gt; Int
+calculateAge currentYear person =
+    currentYear - person.yearBorn
+</code></pre></td></tr></table>
+</section>
+<section >
+<h2>Pain points Elm adresses</h2>
+</section>
+<section >
+<h3>Code in dynamic languages is hard to refactor correctly</h3>
+<ul>
+<li>So we do it less =&gt; lower code quality</li>
+<li>Often introduce bugs/crashes</li>
+</ul>
+</section>
+<section >
+<h3>In Elm, everything is fully typed</h3>
+<ul>
+<li>Even when no type annotations are used, ever</li>
+<li>The compiler checks that all types match</li>
+<li>No "any" type</li>
+</ul>
+</section>
+<section >
+<h3>Records</h3>
+<h4>(Product types)</h4>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="elm">type alias Programmer = 
+    { name : String
+    , favouriteLanguage : String
+    }
+
+daniel : Programmer
+daniel = 
+    { name = "Daniel"
+    , favouriteLanguage = "Elm"
+    }
+
+</code></pre></td></tr></table>
+</section>
+<section >
+<h3>Union types</h3>
+<h4>(aka Sum types)</h4>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="elm">type Status 
+    = Pending
+    | Completed
+
+val1 = Pending
+
+type alias Task =
+    { name : String
+    , status : Status
+    }
+</code></pre></td></tr></table>
+</section>
+<section >
+<h3>Pattern matching</h3>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="elm">getUIString : Status -&gt; String
+getUIString status =
+    case status of
+        Pending -&gt; "Not yet started"
+        -- Compile error! Missing case!
+</code></pre></td></tr></table>
+</section>
+<section >
+<h3>Pattern matching</h3>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="elm">getUIString : Status -&gt; String
+getUIString status =
+    case status of
+        Pending -&gt; "Not yet started"
+        Completed -&gt; "Completed"
+</code></pre></td></tr></table>
+</section>
+<section >
+<h3>What if only some states have data attached?</h3>
+<ul>
+<li>Progress report when running</li>
+<li>How would you model this in another language?</li>
+</ul>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="elm">type Status 
+    = Pending
+    | Completed
+    | Failed
+
+type alias Task =
+    { name : String
+    , status : Status
+    , currentItem : Int
+    , numItems : Int
+    , errors : List String
+    }
+</code></pre></td></tr></table>
+</section>
+<section >
+<h3>Making invalid states unrepresentable</h3>
+</section>
+<section >
+<h3>The real power of union types</h3>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="elm">type Status 
+    = Pending
+    | Running Int Int -- Two ints as "payload" data
+    | Completed
+    | Failed (List String) -- a list of strings as "payload" data
+
+val1 : Status
+val1 = Running 0 10
+
+type alias Task =
+    { name : String
+    , status : Status
+    }
+</code></pre></td></tr></table>
+</section>
+<section >
+<h3>Pattern matching</h3>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="elm">getUIString : Status -&gt; String
+getUIString status =
+    case status of
+        Pending -&gt; 
+            "Not yet started"
+        Running current total -&gt; 
+            (toString (current + 1)) ++ " of " ++ (toString total)
+        Completed -&gt; 
+            "Completed"
+        Failed errors -&gt; 
+            "Failed! Message : " ++ (String.join ", " errors)
+</code></pre></td></tr></table>
+</section>
+<section >
+<h3>Pattern matching</h3>
+<ul>
+<li>Pattern matching is the only way to get payload "out" of a union type</li>
+</ul>
+</section>
+<section >
+<h3>Polymorphic types</h3>
+<h4>(aka Generics)</h4>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="elm">type BinaryTree elementType 
+    = Leaf elementType
+    | Node (BinaryTree elementType) (BinaryTree elementType)
+
+leafOnly : BinaryTree Int
+leafOnly = 
+    Leaf 23
+
+smallTree : BinaryTree Int
+smallTree =
+    Node (Leaf 17) leafOnly
+</code></pre></td></tr></table>
+</section>
+<section >
+<h3>Undefined is not a function / NullReferenceException</h3>
+<ul>
+<li>Elm does not have null/undefined</li>
+<li>This kills a whole family of bugs</li>
+</ul>
+</section>
+<section >
+<h3>How can it represent missing values?</h3>
+</section>
+<section >
+<h3>Dealing with optional values</h3>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+<span class="l">9: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="elm">type Maybe a 
+    = Nothing
+    | Just a
+
+val1 : Maybe Int
+val1 = Nothing
+
+val2 : Maybe Int
+val2 = Just 23
+</code></pre></td></tr></table>
+</section>
+<section >
+<h3>What if we need error information?</h3>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+<span class="l">9: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="elm">type Result err success 
+    = Ok success
+    | Err err
+
+val1 : Result String Int
+val1 = Err "This is an error message"
+
+val2 : Result String Int
+val2 = Ok 23
+</code></pre></td></tr></table>
+</section>
+<section >
+<h3>All values are immutable</h3>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="elm">x = 1
+
+x = 2 -- compile error
+
+x = x + 1 -- compile error
+
+y = x + 1 -- Ok
+
+</code></pre></td></tr></table>
+</section>
+<section >
+<h3>All (nested) fields are immutable</h3>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="elm">type alias Programmer = 
+    { name : String
+    , favouriteLanguage : String
+    }
+
+programmerA : Programmer
+programmerA = 
+    { name = "Daniel"
+    , favouriteLanguage = "Elm"
+    }
+
+programmerA.name = "Eve"
+-- Compile error!
+</code></pre></td></tr></table>
+</section>
+<section >
+<h3>Creating new record values based on old ones</h3>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="elm">type alias Programmer = 
+    { name : String
+    , favouriteLanguage : String
+    }
+
+programmerA : Programmer
+programmerA = 
+    { name = "Daniel"
+    , favouriteLanguage = "Elm"
+    }
+
+programmerB : Programmer
+programmerB = 
+    { programmerA 
+    | name = "Eve"
+    }
+</code></pre></td></tr></table>
+</section>
+<section >
+<h2>This means we can't do loops in elm!</h2>
+<ul>
+<li>Use map, fold (aka reduce), or recursion instead</li>
+</ul>
+</section>
+<section >
+<h3>Elm is entirely pure!</h3>
+<ul>
+<li>No side effects possible in the language</li>
+<li>(Except Debug.log and Debug.crash)</li>
+</ul>
+</section>
+<section >
+<h3>Getting work done with Elm</h3>
+<ul>
+<li>Elm comes with a small runtime</li>
+<li>No direkt Javascript FFI</li>
+</ul>
+</section>
+<section >
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="elm">-- Elm
+addNumbers : Int -&gt; Int -&gt; Int
+addNumbers a b =
+    a + b
+
+result1 = addNumbers 1 2
+result2 = addNumbers 1 2
+result 1 == result 2 -- True
+</code></pre></td></tr></table>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+<span class="l">9: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="Javascript">/// Javascript
+function addNumbersWeird(a, b) {
+    window.myGlobalState = window.myGlobalState || 0;
+    return a + b + (window.myGlobalState++);
+}
+
+var result1 = addNumbersWeird(1, 2);
+var result2 = addNumbersWeird(1, 2);
+result1 == result2; // False
+</code></pre></td></tr></table>
+</section>
+<section >
+<h3>This makes testing super nice</h3>
+<ul>
+<li>Calling the same function again with the same arguments will always lead to the same result</li>
+<li>Thanks to static types, Unit testing can focus on actual logic</li>
+<li>Mocking is usually not necessary with pure functions</li>
+</ul>
+</section>
+<section >
+<h3>And refactorings are safe and fun!</h3>
+</section>
+<section >
+<h3>The elm architecture</h3>
+</section>
+<section data-background-image="images/ElmArchitecture.jpg" data-background-size="contain">
+</section>
+<section >
+<h3>Benefits</h3>
+<ul>
+<li>Model is a single source of truth</li>
+<li>Visual elements are created from the current model</li>
+<li>Apps are well structured</li>
+<li>update function is the only place where your state is modified</li>
+<li>Possible to replay UI sessions easily, implement Undo/Redo, ...</li>
+</ul>
+</section>
+<section >
+<h3>How view functions work</h3>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="elm">view : Model -&gt; Html Msg
+view model =
+    div [ class "counter"]
+        [ button [ onClick Decrement ] [ text "-" ]
+        , div [] [ text (toString model.counter) ]
+        , button [ onClick Increment ] [ text "+" ]
+        ]
+</code></pre></td></tr></table>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="html"><span class="k">&lt;</span><span class="i">div</span> <span class="o">class</span><span class="k">="counter"</span><span class="k">&gt;</span>
+    <span class="k">&lt;</span><span class="i">button</span> <span class="o">onClick</span><span class="k">="dispatch(Decrement)"</span><span class="k">&gt;</span>-<span class="k">&lt;/</span><span class="i">button</span><span class="k">&gt;</span>
+    <span class="k">&lt;</span><span class="i">div</span><span class="k">&gt;</span>{model.counter}<span class="k">&lt;/</span><span class="i">div</span><span class="k">&gt;</span>
+    <span class="k">&lt;</span><span class="i">button</span> <span class="o">onClick</span><span class="k">="dispatch(Increment)"</span><span class="k">&gt;</span>+<span class="k">&lt;/</span><span class="i">button</span><span class="k">&gt;</span>
+<span class="k">&lt;/</span><span class="i">div</span><span class="k">&gt;</span>
+</code></pre></td></tr></table>
+</section>
+<section >
+<h3>Demo time</h3>
+</section>
+<section >
+<h3>Command values tell the Elm runtime to perform side effects</h3>
+<ul>
+<li>Like HTTP requests</li>
+<li>Random number generation</li>
+<li>...</li>
+</ul>
+</section>
+<section >
+<h3>Commands in action</h3>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="elm">import Http
+
+type Msg
+  = LoadClicked
+  | Loaded (Result Http.Error String)
+
+sendCommand : Cmd Msg
+sendCommand =
+  Http.send Loaded (Http.getString "https://example.com/books/war-and-peace")
+
+update : Msg -&gt; Model -&gt; (Model, Cmd Msg)
+update msg model =
+    case msg of
+        LoadClicked -&gt;
+            (model, sendCommand)
+        Loaded (Ok text) -&gt;
+            ...
+        Loaded (Err httpErr) -&gt;
+            ...
+</code></pre></td></tr></table>
+</section>
+<section >
+<h3>Ports are used to send messages to/from Javascript</h3>
+<ul>
+<li>This lets you use any Javascript library / Browser API in native JS</li>
+<li>Send messages back and forth between Elm (Business Logic, Rendering) and your native JS code</li>
+</ul>
+</section>
+<section >
+<h2>Building production apps with Elm</h2>
+<ul>
+<li>Overall: very nice experience</li>
+<li>No runtime exceptions, evar!</li>
+<li>Compiler helps you, especially when refactoring</li>
+<li>Wonderful confidence in our code</li>
+</ul>
+</section>
+<section >
+<h2>Obstacles with Elm</h2>
+<ul>
+<li>Sometimes you need to use ports for trivial things (e.g. focus an input element)</li>
+<li>Can't publish modules with "native" Javascript as official elm package (e.g. library to use Web Audio API)</li>
+<li>Writing Json Decoders is a bit tedious</li>
+</ul>
+</section>
+<section >
+<h2>Elm is ready to be used in production</h2>
+<ul>
+<li>Drastically reduced bug count</li>
+<li>Development speed does not slow down as project gets more complex</li>
+<li>Some JavaScript interop via ports probably necessary, but still much better than all JS!</li>
+</ul>
+</section>
+<section >
+<h2>Where to go to learn more?</h2>
+<ul>
+<li><a href="http://try.elm-lang.org">try.elm-lang.org</a></li>
+<li><a href="http://elm-lang.org"><a href="http://elm-lang.org">http://elm-lang.org</a></a></li>
+<li>Try it for a side project or internal tool</li>
+<li>Go on the Elm slack and ask questions!</li>
+</ul>
+</section>
+<section >
+<h3>Thank you!</h3>
+<h4><a href="http://danielbachler.de">danielbachler.de</a></h4>
+<h4><a href="http://twitter.com/danyx23">@danyx23</a> on Twitter</h4>
+</section>
+<section data-background-image="images/outro_Ber.png" data-background-size="contain">
+</section>
+</section>
+
+
+        </div>
+    </div>
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+    <script>
+        // Add the nohighlight class and data-noescape attribute to code elements that have already been formatted by FSharp.Formatting
+        $('pre.highlighted code').addClass('nohighlight').attr('data-noescape', '');
+
+        // Full list of configuration options available here:
+        // https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+
+            transition: 'none', // default/cube/page/concave/zoom/linear/fade/none
+
+            // Parallax scrolling
+            // parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+            // parallaxBackgroundSize: '2100px 900px',
+
+            // Optional libraries used to extend on reveal.js
+            dependencies: [
+                { src: 'lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: 'plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: 'plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                { src: 'plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: 'plugin/zoom-js/zoom.js', async: true, condition: function () { return !!document.body.classList; } },
+                { src: 'plugin/notes/notes.js', async: true, condition: function () { return !!document.body.classList; } }
+            ]
+        });
+
+    </script>
+</body>
+</html>
+
