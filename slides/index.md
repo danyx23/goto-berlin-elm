@@ -16,6 +16,7 @@
 
 #### [danielbachler.de](http://danielbachler.de)
 #### [@danyx23](http://twitter.com/danyx23) on Twitter
+#### Work at [Douglas Connect](http://www.douglasconnect.com)
 #### This presentation: [danielbachler.de/elm-at-goto-berlin](danielbachler.de/elm-at-goto-berlin)
 
 
@@ -28,6 +29,27 @@
 - data-background-size: contain
 
 ---
+
+- data-background-image: images/LandsOfLanguages1.jpg
+- data-background-size: contain
+
+---
+
+- data-background-image: images/LandsOfLanguages2.jpg
+- data-background-size: contain
+
+---
+
+- data-background-image: images/LandsOfLanguages3.jpg
+- data-background-size: contain
+
+---
+
+- data-background-image: images/LandsOfLanguages4.jpg
+- data-background-size: contain
+
+---
+
 
 ## Elm Elevator pitch
 
@@ -122,7 +144,7 @@ calculateAge currentYear person =
 
 * Even when no type annotations are used, ever
 * The compiler checks that all types match
-* There is no "any" type like in Typescript/Flow
+* No "any" type
 
 ---
 
@@ -445,7 +467,8 @@ result1 == result2; // False
 ### The elm architecture
 
 ---
-- data-background-image: images/Elm.png
+
+- data-background-image: images/ElmArchitecture.jpg
 - data-background-size: contain
 
 ---
@@ -539,6 +562,7 @@ update msg model =
 
 * Sometimes you need to use ports for trivial things (e.g. focus an input element)
 * Can't publish modules with "native" Javascript as official elm package (e.g. library to use Web Audio API)
+* Writing Json Decoders is a bit tedious
 
 ---
 
