@@ -292,9 +292,11 @@ getUIString status =
 <span class="l">10: </span>
 <span class="l">11: </span>
 <span class="l">12: </span>
+<span class="l">13: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip"><code lang="elm">type Status 
     = Pending
+    | Running
     | Completed
     | Failed
 
@@ -560,13 +562,6 @@ programmerB =
 </ul>
 </section>
 <section >
-<h3>Getting work done with Elm</h3>
-<ul>
-<li>Elm comes with a small runtime</li>
-<li>No direkt Javascript FFI</li>
-</ul>
-</section>
-<section >
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
 <span class="l">2: </span>
 <span class="l">3: </span>
@@ -616,6 +611,13 @@ result1 == result2; // False
 </section>
 <section >
 <h3>And refactorings are safe and fun!</h3>
+</section>
+<section >
+<h3>Getting work done with Elm</h3>
+<ul>
+<li>Elm comes with a small runtime</li>
+<li>No direkt Javascript FFI</li>
+</ul>
 </section>
 <section >
 <h3>The elm architecture</h3>
